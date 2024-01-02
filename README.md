@@ -1,2 +1,2 @@
-# cbej
-projet gestion automatisé des demandes au service emploi jeune charisma
+# rc bloc vocation jeune
+projet gestion automatisé des demandes au bloc vocation jeune charisma
