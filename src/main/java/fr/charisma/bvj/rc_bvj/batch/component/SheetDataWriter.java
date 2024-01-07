@@ -29,9 +29,7 @@ public class SheetDataWriter implements ItemWriter<List<Object>> {
 	@SuppressWarnings("unchecked")
 	@Override
 	public void write(Chunk<? extends List<Object>> chunk) throws Exception {
-		// TODO Auto-generated method stub
 		googleSheetsService.writeData(targetSpreadSheetId, targetRange, (List<List<Object>>) chunk.getItems());
-		
 	}
 
 }

@@ -26,5 +26,4 @@ public class GoogleSheetsReader implements ItemReader<List<Object>> {
 	        }
 	        return (currentIndex< data.size()) ? data.get(currentIndex ++):null;
 	}
-
 }
