@@ -1,12 +1,11 @@
-package fr.charisma.bvj.rc_bvj;
+package fr.charisma.bvj.rc_bvj.config;
 
 import java.util.List;
 
 import org.springframework.batch.core.Job;
 import org.springframework.batch.core.Step;
 import org.springframework.batch.core.configuration.annotation.EnableBatchProcessing;
-import org.springframework.batch.core.configuration.annotation.JobBuilderFactory;
-import org.springframework.batch.core.configuration.annotation.StepBuilderFactory;
+import org.springframework.batch.core.configuration.support.DefaultBatchConfiguration;
 import org.springframework.batch.core.job.builder.JobBuilder;
 import org.springframework.batch.core.launch.support.RunIdIncrementer;
 import org.springframework.batch.core.repository.JobRepository;
@@ -15,33 +14,25 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.transaction.PlatformTransactionManager;
 
-import fr.charisma.bvj.rc_bvj.batch.component.GoogleSheetsReader;
+import fr.charisma.bvj.rc_bvj.batch.component.GoogleSheetDataReader;
 import fr.charisma.bvj.rc_bvj.batch.component.SheetDataProcessor;
-import fr.charisma.bvj.rc_bvj.batch.component.SheetDataWriter;
-import lombok.Data;
+import fr.charisma.bvj.rc_bvj.batch.component.GoogleSheetDataWriter;
+import lombok.AllArgsConstructor;
 
 @Configuration
 @EnableBatchProcessing
-@Data
-public class BatchConfiguration {
+@AllArgsConstructor
+public class BatchConfiguration extends DefaultBatchConfiguration{
 	
-	
-	private final  JobBuilderFactory jobBuilderFactory;
-	private final StepBuilderFactory stepBuilderFactory;
-	
-	private final JobRepository jobRepository;
-	
-	private final  JobBuilder jobBuilder;
-	private final StepBuilder stepBuilder;
-	private final GoogleSheetsReader googleSheetsReader;
+	private final GoogleSheetDataReader googleSheetsReader;
+	private final GoogleSheetDataWriter sheetDataWriter;
+
 	private final SheetDataProcessor sheetDataProcessor;
-	private final SheetDataWriter sheetDataWriter;
-	private final PlatformTransactionManager platformTransactionManager;
 	
 	@Bean
-    public Step myStep() {
+    public Step myStep(JobRepository jobRepository, PlatformTransactionManager  plateforManager) {
         return new StepBuilder("myStep", jobRepository)
-                .<List<Object>, List<Object>>     chunk(10,platformTransactionManager)
+                .<List<Object>, List<Object>>     chunk(10,plateforManager)
                 .reader(googleSheetsReader)
                 .processor(sheetDataProcessor)
                 .writer(sheetDataWriter)
@@ -49,10 +40,10 @@ public class BatchConfiguration {
     }
 
     @Bean
-    public Job myJob() {
-        return jobBuilderFactory.get("myJob")
+    public Job myJob(JobRepository jobRepository, PlatformTransactionManager plateforManager) {
+        return new JobBuilder("myJob", jobRepository)
                 .incrementer(new RunIdIncrementer())
-                .flow(myStep())
+                .flow(myStep(jobRepository, plateforManager))
                 .end()
                 .build();
     }

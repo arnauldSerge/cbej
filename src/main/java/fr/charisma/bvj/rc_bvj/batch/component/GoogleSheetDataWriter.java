@@ -11,7 +11,7 @@ import fr.charisma.bvj.rc_bvj.service.GoogleSheetsService;
 import lombok.Data;
 @Component
 @Data
-public class SheetDataWriter implements ItemWriter<List<Object>> {
+public class GoogleSheetDataWriter implements ItemWriter<List<Object>> {
 	//private final SheetDataRepository  sheetDataRepository;
 	private final GoogleSheetsService googleSheetsService;
 	private final String targetSpreadSheetId;

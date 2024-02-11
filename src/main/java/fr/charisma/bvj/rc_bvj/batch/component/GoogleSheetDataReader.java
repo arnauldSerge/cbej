@@ -9,7 +9,7 @@ import fr.charisma.bvj.rc_bvj.service.GoogleSheetsService;
 import lombok.Data;
 @Data
 @Component
-public class GoogleSheetsReader implements ItemReader<List<Object>> {
+public class GoogleSheetDataReader implements ItemReader<List<Object>> {
 	
     private final GoogleSheetsService googleSheetsService;
     private final String spreadsheetId;
